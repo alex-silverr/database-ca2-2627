@@ -1,17 +1,41 @@
-CREATE PROCEDURE sp_UpdateBookDescription
+USE Library;
+GO
+
+CREATE OR ALTER PROCEDURE sp_UpdateBookDescription
 (
-    @Barcode VARCHAR(40),
-    @NewDescription VARCHAR(300)
+    @BookBarcode VARCHAR(40),
+    @NewSummary VARCHAR(MAX)
 )
 AS
 BEGIN
+    SET NOCOUNT ON;
 
-    UPDATE Books
-    SET BookDescription.modify(
-        'replace value of (/Description/text())[1]
-         with sql:variable("@NewDescription")'
+    IF EXISTS
+    (
+        SELECT *
+        FROM Books
+        WHERE BookBarcode = @BookBarcode
     )
-    WHERE BookBarcode = @Barcode;
+    BEGIN
 
+        UPDATE Books
+        SET BookDescription =
+        CAST(
+        '<BookDescription>
+            <Summary>'
+            + @NewSummary +
+        '</Summary>
+        </BookDescription>' AS XML)
+        WHERE BookBarcode = @BookBarcode;
+
+        SELECT
+            BookBarcode,
+            BookDescription
+        FROM Books
+        WHERE
+            BookBarcode=@BookBarcode
+            AND BookDescription.exist('/BookDescription/Summary')=1;
+
+    END
 END;
 GO

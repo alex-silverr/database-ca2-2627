@@ -1,29 +1,32 @@
-CREATE PROCEDURE sp_SearchBooksByKeyword
+CREATE OR ALTER PROCEDURE sp_SearchBooksByKeyword
 (
-    @Keyword VARCHAR(50),
-    @LanguageID TINYINT
+    @Keyword VARCHAR(100),
+    @Language VARCHAR(30)
 )
 AS
 BEGIN
+    SET NOCOUNT ON;
 
     SELECT
         B.BookBarcode,
         B.Title,
+        P.PublisherName,
         L.BookLanguage,
         G.Genre,
-        P.PublisherName
+        S.AvailStatus
     FROM Books B
-    INNER JOIN Languages L
-        ON B.BookLanguage = L.ID
-    INNER JOIN BookGenres G
-        ON B.Genre = G.ID
-    INNER JOIN Publishers P
-        ON B.Publisher = P.ID
+        INNER JOIN Publishers P
+            ON B.Publisher = P.ID
+        INNER JOIN Languages L
+            ON B.BookLanguage = L.ID
+        INNER JOIN BookGenres G
+            ON B.Genre = G.ID
+        INNER JOIN AvailabilityStatuses S
+            ON B.AvailabilityStatus = S.ID
     WHERE
-        B.BookDescription.exist('/Description[contains(., sql:variable("@Keyword"))]') = 1
-        AND B.BookLanguage = @LanguageID
+        B.Title LIKE '%' + @Keyword + '%'
+        AND L.BookLanguage = @Language
     ORDER BY
         B.Title ASC;
-
 END;
 GO

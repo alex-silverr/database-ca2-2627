@@ -1,29 +1,30 @@
-CREATE PROCEDURE sp_BookAuthorXML
+USE Library;
+GO
+
+CREATE OR ALTER PROCEDURE sp_BookAuthorXML
 (
-    @GenreID TINYINT
+    @BookBarcode VARCHAR(40)
 )
 AS
 BEGIN
+    SET NOCOUNT ON;
 
     SELECT
+        B.BookBarcode AS '@Barcode',
         B.Title,
-        dbo.fn_FullAuthorName(A.ID) AS Author,
         P.PublisherName,
-        L.BookLanguage
+        (
+            SELECT
+                dbo.fn_FullAuthorName(BA.Author) AS FullName
+            FROM Books_Authors BA
+            WHERE BA.Book = B.BookBarcode
+            FOR XML PATH('Author'), TYPE
+        ) AS Authors
     FROM Books B
-    INNER JOIN Books_Authors BA
-        ON B.BookBarcode = BA.Book
-    INNER JOIN Authors A
-        ON BA.Author = A.ID
-    INNER JOIN Publishers P
-        ON B.Publisher = P.ID
-    INNER JOIN Languages L
-        ON B.BookLanguage = L.ID
+        INNER JOIN Publishers P
+            ON B.Publisher = P.ID
     WHERE
-        B.Genre = @GenreID
-    ORDER BY
-        B.Title ASC
-    FOR XML PATH('Book'), ROOT('LibraryBooks');
-
+        B.BookBarcode = @BookBarcode
+    FOR XML PATH('Book'), ROOT('Library');
 END;
 GO
