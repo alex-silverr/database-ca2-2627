@@ -38,12 +38,12 @@ CREATE TABLE Publishers(
     ID INT IDENTITY(1,1) PRIMARY KEY,
     -- PublisherName renamed from Name due to reserved keyword
     PublisherName VARCHAR(50) NOT NULL,
-    Website VARCHAR(50) NOT NULL UNIQUE,
-    Email VARCHAR(60) NOT NULL UNIQUE,
-    Phone VARCHAR(15) NOT NULL UNIQUE,
+    Website VARCHAR(200) NOT NULL,
+    Email VARCHAR(60) NOT NULL,
+    Phone VARCHAR(15) NOT NULL,
     -- PublisherAddress renamed from Address due to reserved keyword
-    PublisherAddress VARCHAR(150) NOT NULL UNIQUE,
-    DateOfFounding DATE NOT NULL 
+    PublisherAddress VARCHAR(150) NOT NULL,
+    YearOfFounding VARCHAR(4) NOT NULL 
 );
 
 CREATE TABLE Authors(
