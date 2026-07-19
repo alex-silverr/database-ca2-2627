@@ -3,7 +3,7 @@
 -- @RentalDays as a number of days to add to the rental record
 
 CREATE OR ALTER PROCEDURE sp_ChangeRentalDueDate
-    @RentalID INT
+    @RentalID INT,
     @RentalDays INT
 AS
 BEGIN

@@ -4,7 +4,7 @@
 -- as 'On Time', 'Overdue', 'Returned' or 'Book Lost'  
 
 CREATE OR ALTER PROCEDURE sp_UpdateRentalStatus
-    @RentalID INT
+    @RentalID INT,
     @NewRentStatusText VARCHAR(10)
 AS
 BEGIN
