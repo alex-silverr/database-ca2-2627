@@ -26,3 +26,4 @@ BEGIN
         (DATEADD(day, @RentalDays, @CurDate)),
         (SELECT ID FROM RentalStatuses WHERE RentStatus = @RentStatusText)
     )
+END;
