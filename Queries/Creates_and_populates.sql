@@ -164,7 +164,7 @@ CREATE TABLE RentRecords(
     RentedBy INT NOT NULL,
     RentedBook VARCHAR(40) NOT NULL,
     DateOfRental DATETIME NOT NULL,
-    DueDate DATETIME NOT NULL,
+    DueDate DATE NOT NULL,
     AuthorizedBy VARCHAR(9) NOT NULL,
     -- RentStatus renamed from Status due to reserved keyword
     RentStatus TINYINT NOT NULL,
